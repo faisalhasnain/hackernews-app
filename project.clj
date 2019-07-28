@@ -36,7 +36,7 @@
                     :external-config      {:devtools/config {:features-to-install :all}}
                     }}
 
-    {:id           "min"
+    {:id           "prod"
      :source-paths ["src"]
      :compiler     {:main            hackernews-pwa.core
                     :output-to       "resources/public/js/compiled/app.js"
