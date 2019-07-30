@@ -1,12 +1,18 @@
 (ns hackernews-pwa.views
   (:require
-   [re-frame.core :as re-frame]))
+   [re-frame.core :as re-frame]
+   [hackernews-pwa.icons :as icons]))
 
 (def tabs {:top "Top" :new "New" :ask "Ask" :show "Show" :jobs "Jobs"})
 
-(defn post-item [{:keys [id title]}]
+(defn post-item [{:keys [id title url points user time_ago domain comments_count]}]
   ^{:key id} [:div.box.post-item
-                         [:div.subtitle title]])
+              [:div.post-link
+               icons/external-link
+               [:a {:href url}
+                [:div.subtitle title]]]
+              [:div.post-stats
+               [:span icons/thumbs-up points] [:span icons/message-square comments_count] [:span icons/clock time_ago] [:span icons/user user]]])
 
 (defn main-panel []
   (let [loading @(re-frame/subscribe [:get-db :loading])
@@ -21,5 +27,5 @@
        [:div.loading-container
         [:button {:class "button is-large is-loading loading-indicator"}]]
        (let [posts @(re-frame/subscribe [:get-db :posts])]
-         [:div
+         [:div.container.is-fluid
           (map post-item posts)]))]))
