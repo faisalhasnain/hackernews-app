@@ -1,20 +1,20 @@
 (ns hackernews-pwa.views
   (:require
    [re-frame.core :as re-frame]
+   [hackernews-pwa.events :as events]
    [hackernews-pwa.subs :as subs]))
 
+(def tabs {:top "Top" :new "New" :ask "Ask" :show "Show" :jobs "Jobs"})
+
 (defn main-panel []
-  (let [loading (re-frame/subscribe [::subs/loading])]
+  (let [loading @(re-frame/subscribe [::subs/loading])
+        tab @(re-frame/subscribe [::subs/tab])]
     [:div.page
      [:div.app-title
       [:div.title "Hacker News"]]
      [:div.tabs
       [:ul
-       [:li.is-active [:a "Top"]]
-       [:li [:a "New"]]
-       [:li [:a "Ask"]]
-       [:li [:a "Show"]]
-       [:li [:a "Jobs"]]]]
+       (map (fn [[key val]] ^{:key key} [:li {:class (if (= tab key) "is-active") :on-click #(re-frame/dispatch [::events/change-tab key])} [:a val]]) tabs)]]
      (if loading
        [:div.loading-container
         [:button {:class "button is-large is-loading loading-indicator"}]]

@@ -4,8 +4,7 @@
    [re-frame.core :as re-frame]
    [hackernews-pwa.events :as events]
    [hackernews-pwa.views :as views]
-   [hackernews-pwa.config :as config]
-   ))
+   [hackernews-pwa.config :as config]))
 
 
 (defn dev-setup []

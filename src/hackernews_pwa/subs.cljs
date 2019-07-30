@@ -4,5 +4,10 @@
 
 (re-frame/reg-sub
  ::loading
- (fn [db]
+ (fn [db v]
    (:loading db)))
+
+(re-frame/reg-sub
+ ::tab
+ (fn [db v]
+   (:tab db)))

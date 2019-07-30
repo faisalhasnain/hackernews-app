@@ -2,4 +2,4 @@
 
 (def default-db
   {:loading true
-   :tab "top"})
+   :tab :top})
