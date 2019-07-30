@@ -2,7 +2,8 @@
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.clojure/clojurescript "1.10.520"]
                  [reagent "0.8.1"]
-                 [re-frame "0.10.8"]]
+                 [re-frame "0.10.8"]
+                 [cljs-ajax "0.7.5"]]
 
   :plugins [[lein-cljsbuild "1.1.7"]]
 
