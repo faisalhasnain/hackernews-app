@@ -3,6 +3,7 @@
    [reagent.core :as reagent]
    [re-frame.core :as re-frame]
    [hackernews-pwa.events :as events]
+   [hackernews-pwa.subs :as subs]
    [hackernews-pwa.views :as views]
    [hackernews-pwa.config :as config]))
 
@@ -18,6 +19,6 @@
                   (.getElementById js/document "app")))
 
 (defn ^:export init []
-  (re-frame/dispatch-sync [::events/initialize-db])
+  (re-frame/dispatch-sync [:initialize-db])
   (dev-setup)
   (mount-root))
