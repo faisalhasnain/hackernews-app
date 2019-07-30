@@ -6,9 +6,9 @@
 (re-frame/reg-event-db
  ::initialize-db
  (fn [_ _]
-   db/default-db))
+   db/default))
 
 (re-frame/reg-event-db
- ::change-tab
- (fn [db [_ tab]]
-   (assoc db :tab tab)))
+ ::change-db
+ (fn [db [_ name val]]
+   (assoc db name val)))

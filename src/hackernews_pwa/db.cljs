@@ -1,5 +1,5 @@
 (ns hackernews-pwa.db)
 
-(def default-db
+(def default
   {:loading true
    :tab :top})
