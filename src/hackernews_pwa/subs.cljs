@@ -3,6 +3,6 @@
    [re-frame.core :as re-frame]))
 
 (re-frame/reg-sub
- ::name
+ ::loading
  (fn [db]
-   (:name db)))
+   (:loading db)))

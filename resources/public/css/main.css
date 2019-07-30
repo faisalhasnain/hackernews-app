@@ -1,0 +1,12 @@
+.app-title {
+  margin: 1rem;
+}
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(25vh);
+}
+.loading-indicator {
+  border: none;
+}
