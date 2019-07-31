@@ -6,13 +6,14 @@
 (def tabs {:top "Top" :new "New" :ask "Ask" :show "Show" :jobs "Jobs"})
 
 (defn post-item [{:keys [id title url domain points user time_ago domain comments_count]}]
-  ^{:key id} [:div.box.post-item
-              [:div.post-link
-               icons/external-link
-               [:a {:href url :target "_blank"}
-                [:div [:span.subtitle title] (if domain [:span.domain (str " (" domain ")")])]]]
-              [:div.post-stats
-               (if points [:span icons/thumbs-up points]) [:span icons/message-square comments_count] [:span icons/clock time_ago] (if user [:span icons/user user])]])
+  (let [tab @(re-frame/subscribe [:get-db :tab])]
+    ^{:key id} [:div.box.post-item
+                [:div.post-link
+                 (if (not= tab :ask) icons/external-link)
+                 [:a {:href url :target "_blank"}
+                  [:div [:span.subtitle title] (if domain [:span.domain (str " (" domain ")")])]]]
+                [:div.post-stats
+                 (if points [:span icons/thumbs-up points]) [:span icons/message-square comments_count] [:span icons/clock time_ago] (if user [:span icons/user user])]]))
 
 (defn navigation []
   (let [tab @(re-frame/subscribe [:get-db :tab])]
@@ -32,7 +33,7 @@
        [:span {:aria-hidden "true"}]]]
      [:div#navbarBasicExample.navbar-menu
       [:div.navbar-start
-       (map (fn [[key val]] ^{:key key} [:a.navbar-item {:class (if (= tab key) "is-active") :on-click #(re-frame/dispatch [:fetch-posts key])} val]) tabs)]]]))
+       (doall (map (fn [[key val]] ^{:key key} [:a.navbar-item {:class (if (= tab key) "is-active") :on-click #(re-frame/dispatch [:fetch-posts key])} val]) tabs))]]]))
 
 (defn main-panel []
   (let [loading @(re-frame/subscribe [:get-db :loading])]
@@ -43,4 +44,4 @@
         [:button {:class "button is-large is-loading loading-indicator"}]]
        (let [posts @(re-frame/subscribe [:get-db :posts])]
          [:div.container.is-fluid
-          (map post-item posts)]))]))
+          (doall (map post-item posts))]))]))
