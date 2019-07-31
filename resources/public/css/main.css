@@ -9,7 +9,7 @@
   height: calc(25vh);
 }
 .loading-indicator {
-  border: none;
+  border-color: transparent;
 }
 
 .post-item {

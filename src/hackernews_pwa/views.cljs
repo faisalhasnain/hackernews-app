@@ -21,17 +21,17 @@
      {:aria-label "main navigation", :role "navigation"}
      [:div.navbar-brand
       [:a.navbar-item
-       {:href "/"}
+       {:on-click #(re-frame/dispatch [:fetch-posts :top])}
        [:span.title.has-text-white "Hacker News"]]
       [:a.navbar-burger.burger
-       {:data-target "navbarBasicExample"
+       {:data-target "navbar"
         :aria-expanded "false"
         :aria-label "menu"
         :role "button"}
        [:span {:aria-hidden "true"}]
        [:span {:aria-hidden "true"}]
        [:span {:aria-hidden "true"}]]]
-     [:div#navbarBasicExample.navbar-menu
+     [:div#navbar.navbar-menu
       [:div.navbar-start
        (doall (map (fn [[key val]] ^{:key key} [:a.navbar-item {:class (if (= tab key) "is-active") :on-click #(re-frame/dispatch [:fetch-posts key])} val]) tabs))]]]))
 
