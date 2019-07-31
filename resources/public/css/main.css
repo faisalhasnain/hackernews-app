@@ -1,5 +1,6 @@
-.app-title {
-  margin: 1rem;
+.page {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 .loading-container {
   display: flex;

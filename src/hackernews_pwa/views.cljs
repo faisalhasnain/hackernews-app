@@ -10,19 +10,34 @@
               [:div.post-link
                icons/external-link
                [:a {:href url :target "_blank"}
-                [:div [:span.subtitle title] [:span.domain (str " (" domain ")")]]]]
+                [:div [:span.subtitle title] (if domain [:span.domain (str " (" domain ")")])]]]
               [:div.post-stats
-               [:span icons/thumbs-up points] [:span icons/message-square comments_count] [:span icons/clock time_ago] [:span icons/user user]]])
+               (if points [:span icons/thumbs-up points]) [:span icons/message-square comments_count] [:span icons/clock time_ago] (if user [:span icons/user user])]])
+
+(defn navigation []
+  (let [tab @(re-frame/subscribe [:get-db :tab])]
+    [:nav.navbar.is-info.is-fixed-top
+     {:aria-label "main navigation", :role "navigation"}
+     [:div.navbar-brand
+      [:a.navbar-item
+       {:href "/"}
+       [:span.title.has-text-white "Hacker News"]]
+      [:a.navbar-burger.burger
+       {:data-target "navbarBasicExample"
+        :aria-expanded "false"
+        :aria-label "menu"
+        :role "button"}
+       [:span {:aria-hidden "true"}]
+       [:span {:aria-hidden "true"}]
+       [:span {:aria-hidden "true"}]]]
+     [:div#navbarBasicExample.navbar-menu
+      [:div.navbar-start
+       (map (fn [[key val]] ^{:key key} [:a.navbar-item {:class (if (= tab key) "is-active") :on-click #(re-frame/dispatch [:fetch-posts key])} val]) tabs)]]]))
 
 (defn main-panel []
-  (let [loading @(re-frame/subscribe [:get-db :loading])
-        tab @(re-frame/subscribe [:get-db :tab])]
+  (let [loading @(re-frame/subscribe [:get-db :loading])]
     [:div.page
-     [:div.app-title
-      [:div.title "Hacker News"]]
-     [:div.tabs
-      [:ul
-       (map (fn [[key val]] ^{:key key} [:li {:class (if (= tab key) "is-active") :on-click #(re-frame/dispatch [:fetch-posts key])} [:a val]]) tabs)]]
+     (navigation)
      (if loading
        [:div.loading-container
         [:button {:class "button is-large is-loading loading-indicator"}]]
