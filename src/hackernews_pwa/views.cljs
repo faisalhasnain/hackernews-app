@@ -37,8 +37,8 @@
 
 
 (defn render-comments [{:keys [id content user time_ago comments depth]}]
-  [:<> ^{:key id} [:div.box.post-item {:style {:margin-left (str (* (or depth 0) 20) "px")}}
-                   [:div.contents {:dangerouslySetInnerHTML {"__html" content}}]
+  [:<> ^{:key id} [:div.box.post-item {:style {:margin-left (str (* (or depth 0) 1.5) "rem")}}
+                   [:div.post-contents {:dangerouslySetInnerHTML {"__html" content}}]
                    [:div.post-stats
                     [:span icons/user user] [:span icons/clock time_ago]]]
    (if comments (->> comments (map #(assoc % :depth (inc depth))) (map render-comments)))])

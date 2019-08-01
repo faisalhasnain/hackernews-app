@@ -31,6 +31,10 @@
   margin-bottom: 1rem;
 }
 
+.post-contents {
+  margin-bottom: 0.5rem;
+}
+
 .post-link .domain {
   color: grey;
 }
