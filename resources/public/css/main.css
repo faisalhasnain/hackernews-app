@@ -35,11 +35,14 @@
   color: grey;
 }
 
-.post-stats span {
+.post-stats span, .post-stats a {
   margin-right: 1.5rem;
-  color: grey;
   line-height: 1rem;
   vertical-align: middle;
+}
+
+.post-stats span {
+  color: grey;
 }
 
 .post-stats .feather {

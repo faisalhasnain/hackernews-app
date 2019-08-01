@@ -2,4 +2,5 @@
 
 (def default
   {:loading true
-   :tab :top})
+   :tab :top
+   :type :posts})

@@ -18,7 +18,17 @@
       :response-format :json
       :handler       #(re-frame/dispatch [:show-resp :posts %1])
       :error-handler #(re-frame/dispatch [:show-error :error %1])})
-   (assoc db :tab tab :loading true)))
+   (assoc db :tab tab :loading true :type :posts)))
+
+(re-frame/reg-event-db
+ :fetch-comments
+ (fn [db [_ id]]
+   (GET (str "https://api.hnpwa.com/v0/item/" id ".json")
+     {:keywords? true
+      :response-format :json
+      :handler       #(re-frame/dispatch [:show-resp :comments %1])
+      :error-handler #(re-frame/dispatch [:show-error :error %1])})
+   (assoc db :tab tab :loading true :type :comments)))
 
 (re-frame/reg-event-db
  :initialize-db

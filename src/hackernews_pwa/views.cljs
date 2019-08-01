@@ -5,16 +5,6 @@
 
 (def tabs {:top "Top" :new "New" :ask "Ask" :show "Show" :jobs "Jobs"})
 
-(defn post-item [{:keys [id title url domain points user time_ago domain comments_count]}]
-  (let [tab @(re-frame/subscribe [:get-db :tab])]
-    ^{:key id} [:div.box.post-item
-                [:div.post-link
-                 (if (not= tab :ask) icons/external-link)
-                 [:a {:href url :target "_blank"}
-                  [:div [:span.subtitle title] (if domain [:span.domain (str " (" domain ")")])]]]
-                [:div.post-stats
-                 (if points [:span icons/thumbs-up points]) [:span icons/message-square comments_count] [:span icons/clock time_ago] (if user [:span icons/user user])]]))
-
 (defn navigation []
   (let [tab @(re-frame/subscribe [:get-db :tab])]
     [:nav.navbar.is-info.is-fixed-top
@@ -35,13 +25,40 @@
       [:div.navbar-start
        (doall (map (fn [[key val]] ^{:key key} [:a.navbar-item {:class (if (= tab key) "is-active") :on-click #(re-frame/dispatch [:fetch-posts key])} val]) tabs))]]]))
 
+(defn render-post [{:keys [id title url domain points user time_ago domain comments_count]}]
+  (let [tab @(re-frame/subscribe [:get-db :tab])]
+    ^{:key id} [:div.box.post-item
+                [:div.post-link
+                 (if (not= tab :ask) icons/external-link)
+                 [:a {:href url :target "_blank"}
+                  [:div [:span.subtitle title] (if domain [:span.domain (str " (" domain ")")])]]]
+                [:div.post-stats
+                 (if points [:span icons/thumbs-up points]) [:a {:on-click #(re-frame/dispatch [:fetch-comments id])} icons/message-square comments_count] [:span icons/clock time_ago] (if user [:span icons/user user])]]))
+
+
+(defn render-comments [{:keys [id content user time_ago comments depth]}]
+  [:<> ^{:key id} [:div.box.post-item {:style {:margin-left (str (* (or depth 0) 20) "px")}}
+                   [:div.contents {:dangerouslySetInnerHTML {"__html" content}}]
+                   [:div.post-stats
+                    [:span icons/user user] [:span icons/clock time_ago]]]
+   (if comments (->> comments (map #(assoc % :depth (inc depth))) (map render-comments)))])
+
 (defn main-panel []
-  (let [loading @(re-frame/subscribe [:get-db :loading])]
+  (let [loading @(re-frame/subscribe [:get-db :loading])
+        type @(re-frame/subscribe [:get-db :type])]
     [:div.page
      (navigation)
-     (if loading
-       [:div.loading-container
-        [:button {:class "button is-large is-loading loading-indicator"}]]
-       (let [posts @(re-frame/subscribe [:get-db :posts])]
-         [:div.container.is-fluid
-          (doall (map post-item posts))]))]))
+     (cond
+       loading [:div.loading-container
+                [:button {:class "button is-large is-loading loading-indicator"}]]
+       (= type :posts) (let [posts @(re-frame/subscribe [:get-db :posts])]
+                         [:div.container.is-fluid
+                          (doall (map render-post posts))])
+       (= type :comments) (let [item @(re-frame/subscribe [:get-db :comments])
+                                comments (:comments item)]
+                            [:div.container.is-fluid
+                             (render-post (-> item
+                                              (dissoc item :comments)
+                                              (assoc item :comments_count (count comments))))
+                             (doall (map render-comments comments))]))]))
+
