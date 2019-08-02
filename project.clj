@@ -5,7 +5,8 @@
                  [re-frame "0.10.8"]
                  [cljs-ajax "0.7.5"]
                  [metosin/reitit-core "0.3.9"]
-                 [metosin/reitit-frontend "0.3.9"]]
+                 [metosin/reitit-frontend "0.3.9"]
+                 [metosin/reitit-spec "0.3.9"]]
 
   :plugins [[lein-cljsbuild "1.1.7"]]
 
