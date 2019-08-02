@@ -3,4 +3,5 @@
 (def default
   {:loading true
    :tab :top
-   :type :posts})
+   :type :posts
+   :current-route nil})

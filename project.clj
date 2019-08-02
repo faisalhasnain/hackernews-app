@@ -3,7 +3,9 @@
                  [org.clojure/clojurescript "1.10.520"]
                  [reagent "0.8.1"]
                  [re-frame "0.10.8"]
-                 [cljs-ajax "0.7.5"]]
+                 [cljs-ajax "0.7.5"]
+                 [metosin/reitit-core "0.3.9"]
+                 [metosin/reitit-frontend "0.3.9"]]
 
   :plugins [[lein-cljsbuild "1.1.7"]]
 

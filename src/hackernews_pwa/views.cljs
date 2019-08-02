@@ -1,9 +1,36 @@
 (ns hackernews-pwa.views
   (:require
    [re-frame.core :as re-frame]
+   [reitit.core :as reitit-core]
+   [reitit.frontend :as reitit-frontend]
+   [reitit.frontend.easy :as reitit-frontend-easy]
+   [reitit.frontend.controllers :as reitit-frontend-controllers]
    [hackernews-pwa.icons :as icons]))
 
 (def tabs {:top "Top" :new "New" :ask "Ask" :show "Show" :jobs "Jobs"})
+
+; routing utils
+
+(re-frame/reg-fx
+ :navigate!
+ (fn [[k params query]]
+   (reitit-frontend-easy/push-state k params query)))
+
+(re-frame/reg-event-fx
+ :navigate
+ (fn [db [_ route params query]]
+   {:navigate! [route params query]}))
+
+(re-frame/reg-event-db
+ :navigated
+ (fn [db [_ new-match]]
+   (let [old-match   (:current-route db)
+         controllers (reitit-frontend-controllers/apply-controllers (:controllers old-match) new-match)]
+     (assoc db :current-route (assoc new-match :controllers controllers)))))
+
+(defn on-navigate [new-match]
+  (when new-match
+    (re-frame/dispatch [:navigated new-match])))
 
 (defn navigation []
   (let [tab @(re-frame/subscribe [:get-db :tab])]
@@ -11,7 +38,7 @@
      {:aria-label "main navigation", :role "navigation"}
      [:div.navbar-brand
       [:a.navbar-item
-       {:on-click #(re-frame/dispatch [:fetch-posts :top])}
+       {:on-click #(re-frame/dispatch [:navigate :posts {:tab :top}])}
        [:span.title.has-text-white "Hacker News"]]
       [:a.navbar-burger.burger
        {:data-target "navbar"
@@ -23,7 +50,7 @@
        [:span {:aria-hidden "true"}]]]
      [:div#navbar.navbar-menu
       [:div.navbar-start
-       (doall (map (fn [[key val]] ^{:key key} [:a.navbar-item {:class (if (= tab key) "is-active") :on-click #(re-frame/dispatch [:fetch-posts key])} val]) tabs))]]]))
+       (doall (map (fn [[key val]] ^{:key key} [:a.navbar-item {:class (if (= tab key) "is-active") :on-click #(re-frame/dispatch [:navigate :posts {:tab key}])} val]) tabs))]]]))
 
 (defn render-post [{:keys [id title url domain points user time_ago domain comments_count]}]
   (let [tab @(re-frame/subscribe [:get-db :tab])]
@@ -33,32 +60,59 @@
                  [:a {:href url :target "_blank"}
                   [:div [:span.subtitle title] (if domain [:span.domain (str " (" domain ")")])]]]
                 [:div.post-stats
-                 (if points [:span icons/thumbs-up points]) [:a {:on-click #(re-frame/dispatch [:fetch-comments id])} icons/message-square comments_count] [:span icons/clock time_ago] (if user [:span icons/user user])]]))
+                 (if points [:span icons/thumbs-up points]) [:a {:on-click #(re-frame/dispatch [:navigate :comments {:id id}])} icons/message-square comments_count] [:span icons/clock time_ago] (if user [:span icons/user user])]]))
 
 
-(defn render-comments [{:keys [id content user time_ago comments depth]}]
+(defn render-comment [{:keys [id content user time_ago comments depth]}]
   [:<> ^{:key id} [:div.box.post-item {:style {:margin-left (str (* (or depth 0) 1.5) "rem")}}
                    [:div.post-contents {:dangerouslySetInnerHTML {"__html" content}}]
                    [:div.post-stats
                     [:span icons/user user] [:span icons/clock time_ago]]]
-   (if comments (->> comments (map #(assoc % :depth (inc depth))) (map render-comments)))])
+   (if comments (->> comments (map #(assoc % :depth (inc depth))) (map render-comment)))])
+
+(defn render-posts []
+  (let [posts @(re-frame/subscribe [:get-db :posts])]
+    [:div.container.is-fluid
+     (doall (map render-post posts))]))
+
+(defn render-comments []
+  (let [item @(re-frame/subscribe [:get-db :comments])
+        comments (:comments item)]
+    [:div.container.is-fluid
+     (render-post (-> item
+                      (dissoc item :comments)
+                      (assoc item :comments_count (count comments))))
+     (doall (map render-comment comments))]))
+
+
+(def routes
+  [["/:tab"
+    {:name      :posts
+     :view      render-posts
+     :controllers
+     [{:parameters {:path [:tab]} :start (fn [{{tab :tab} :path}] (re-frame/dispatch [:fetch-posts (keyword tab)]))}]}]
+   ["/:tab/:id"
+    {:name      :comments
+     :view      render-comments
+     :controllers
+     [{:parameters {:path [:tab :id]} :start (fn [{{tab :tab id :id} :path}] (re-frame/dispatch [:fetch-comments id]))}]}]])
+
+(def router (reitit-frontend/router routes))
+
+(defn init-routes! []
+  (js/console.log "initializing routes")
+  (reitit-frontend-easy/start!
+   router
+   on-navigate
+   {:use-fragment true}))
 
 (defn main-panel []
   (let [loading @(re-frame/subscribe [:get-db :loading])
-        type @(re-frame/subscribe [:get-db :type])]
+        current-route @(re-frame/subscribe [:get-db :current-route])]
     [:div.page
      (navigation)
      (cond
        loading [:div.loading-container
-                [:button {:class "button is-large is-loading loading-indicator"}]]
-       (= type :posts) (let [posts @(re-frame/subscribe [:get-db :posts])]
-                         [:div.container.is-fluid
-                          (doall (map render-post posts))])
-       (= type :comments) (let [item @(re-frame/subscribe [:get-db :comments])
-                                comments (:comments item)]
-                            [:div.container.is-fluid
-                             (render-post (-> item
-                                              (dissoc item :comments)
-                                              (assoc item :comments_count (count comments))))
-                             (doall (map render-comments comments))]))]))
+                [:button.button.is-large.is-loading.loading-indicator]]
+       current-route [(-> current-route :data :view)])]))
 

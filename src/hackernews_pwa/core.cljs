@@ -15,6 +15,7 @@
 
 (defn mount-root []
   (re-frame/clear-subscription-cache!)
+  (views/init-routes!)
   (reagent/render [views/main-panel]
                   (.getElementById js/document "app")))
 
