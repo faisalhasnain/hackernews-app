@@ -26,7 +26,6 @@
 (re-frame/reg-event-fx
  :fetch-comments
  (fn [{db :db} [_ id]]
-   (println "fetching comments")
    {:http-xhrio {:method          :get
                  :uri             (str "https://api.hnpwa.com/v0/item/" id ".json")
                  :format          (ajax/json-request-format)
