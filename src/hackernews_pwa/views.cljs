@@ -11,8 +11,7 @@
      {:aria-label "main navigation", :role "navigation"}
      [:div.navbar-brand
       [:a.navbar-item
-       {:href "/"}
-       ;{:on-click #(re-frame/dispatch [:navigate :posts {:tab :top}])}
+       {:on-click #(re-frame/dispatch [:navigate :posts {:tab :top}])}
        [:span.title.has-text-white "Hacker News"]]
       [:a.navbar-burger.burger
        {:data-target "navbar"

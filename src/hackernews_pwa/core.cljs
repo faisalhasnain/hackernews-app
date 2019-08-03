@@ -22,6 +22,5 @@
 
 (defn ^:export init []
   (re-frame/dispatch-sync [:initialize-db])
-  (re-frame/dispatch [:load-top-posts])
   (dev-setup)
   (mount-root))

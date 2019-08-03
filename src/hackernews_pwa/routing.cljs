@@ -32,7 +32,11 @@
     (re-frame/dispatch [:navigated new-match])))
 
 (def routes
-  [["/:tab"
+  [["/"
+    {:name :root
+     :controllers
+     [{:start (fn [] (re-frame/dispatch [:load-top-posts]))}]}]
+   ["/:tab"
     {:name      :posts
      :view      views/render-posts
      :parameters {:path {:tab keyword?}}
