@@ -30,35 +30,39 @@
 (defn render-post [{:keys [id title url domain points user time_ago domain comments_count]}]
   (let [current-route @(re-frame/subscribe [:get-db :current-route])
         tab (-> current-route :parameters :path :tab)]
-    ^{:key id} [:div.box.post-item
-                [:div.post-link
-                 (if (not= tab :ask) icons/external-link)
-                 [:a {:href url :target "_blank"}
-                  [:div [:span.subtitle title] (if domain [:span.domain (str " (" domain ")")])]]]
-                [:div.post-stats
-                 (if points [:span icons/thumbs-up points]) [:a {:on-click #(re-frame/dispatch [:navigate :comments {:tab tab :id id}])} icons/message-square comments_count] [:span icons/clock time_ago] (if user [:span icons/user user])]]))
+    [:div.box.post-item
+     [:div.post-link
+      (if (not= tab :ask) icons/external-link)
+      [:a {:href url :target "_blank"}
+       [:div [:span.subtitle title] (if domain [:span.domain (str " (" domain ")")])]]]
+     [:div.post-stats
+      (if points [:span icons/thumbs-up points]) [:a {:on-click #(re-frame/dispatch [:navigate :comments {:tab tab :id id}])} icons/message-square comments_count] [:span icons/clock time_ago] (if user [:span icons/user user])]]))
 
 
 (defn render-comment [{:keys [id content user time_ago comments depth]}]
-  [:<> ^{:key id} [:div.box.post-item {:style {:margin-left (str (* (or depth 0) 1.5) "rem")}}
-                   [:div.post-contents {:dangerouslySetInnerHTML {"__html" content}}]
-                   [:div.post-stats
-                    [:span icons/user user] [:span icons/clock time_ago]]]
-   (if comments (->> comments (map #(assoc % :depth (inc depth))) (map render-comment)))])
+  [:<> [:div.box.post-item {:style {:margin-left (str (* (or depth 0) 1.5) "rem")}}
+        [:div.post-contents {:dangerouslySetInnerHTML {"__html" content}}]
+        [:div.post-stats
+         [:span icons/user user] [:span icons/clock time_ago]]]
+   (if comments
+     (for [comm comments]
+       ^{:key (:id comm)} [render-comment (assoc comm :depth (inc depth))]))])
 
 (defn render-posts [params]
   (let [posts @(re-frame/subscribe [:get-db :posts])]
     [:div.container.is-fluid
-     (for [post posts] [render-post post])]))
+     (for [post posts]
+       ^{:key (:id post)} [render-post post])]))
 
 (defn render-comments [params]
   (let [item @(re-frame/subscribe [:get-db :comments])
         comments (:comments item)]
     [:div.container.is-fluid
-     (render-post (-> item
-                      (dissoc item :comments)
-                      (assoc item :comments_count (count comments))))
-     (for [comment comments] [render-comment comment])]))
+     ^{:key (:id item)} [render-post (-> item
+                                         (dissoc item :comments)
+                                         (assoc item :comments_count (count comments)))]
+     (for [comment comments]
+       ^{:key (:id comment)} [render-comment comment])]))
 
 
 (defn main-panel []
@@ -66,7 +70,6 @@
         current-route @(re-frame/subscribe [:get-db :current-route])]
     [:div.page
      [navigation current-route]
-     (println :main loading current-route)
      (cond
        loading [:div.loading-container
                 [:button.button.is-large.is-loading.loading-indicator]]
