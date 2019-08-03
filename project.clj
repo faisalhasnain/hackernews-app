@@ -4,6 +4,7 @@
                  [reagent "0.8.1"]
                  [re-frame "0.10.8"]
                  [cljs-ajax "0.7.5"]
+                 [day8.re-frame/http-fx "0.1.6"]
                  [metosin/reitit-core "0.3.9"]
                  [metosin/reitit-frontend "0.3.9"]
                  [metosin/reitit-spec "0.3.9"]]
