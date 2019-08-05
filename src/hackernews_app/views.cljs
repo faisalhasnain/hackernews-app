@@ -31,8 +31,11 @@
         tab (-> current-route :parameters :path :tab)]
     [:div.box.post-item
      [:div.post-link
-      [:a {:href url :target "_blank"}
-       (if (not= tab :ask) icons/external-link) [:span.subtitle title] (if domain [:span.domain (str " (" domain ")")])]]
+      (if (not= tab :ask)
+        [:a {:href url :target "_blank"}
+         icons/external-link [:span.subtitle title] (if domain [:span.domain (str " (" domain ")")])]
+        [:a {:on-click #(re-frame/dispatch [:navigate :comments {:tab tab :id id}])}
+         [:span.subtitle title] (if domain [:span.domain (str " (" domain ")")])])]
      [:div.post-stats
       (if points [:span {:title "Points"} icons/thumbs-up points]) [:a {:title "Comments" :on-click #(re-frame/dispatch [:navigate :comments {:tab tab :id id}])} icons/message-square comments_count] [:span icons/clock time_ago] (if user [:span {:title "User"} icons/user user])]]))
 
