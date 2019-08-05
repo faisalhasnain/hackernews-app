@@ -1,4 +1,4 @@
-(ns hackernews-pwa.icons)
+(ns hackernews-app.icons)
 
 (def external-link [:svg.feather.feather-external-link
                     {:stroke-linejoin "round"

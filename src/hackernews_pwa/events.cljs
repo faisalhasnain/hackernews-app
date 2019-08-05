@@ -1,9 +1,9 @@
-(ns hackernews-pwa.events
+(ns hackernews-app.events
   (:require
    [re-frame.core :as re-frame]
    [ajax.core :as ajax]
    [day8.re-frame.http-fx]
-   [hackernews-pwa.db :as db]))
+   [hackernews-app.db :as db]))
 
 (def urls {:top "https://api.hnpwa.com/v0/news/1.json"
            :new "https://api.hnpwa.com/v0/newest/1.json"

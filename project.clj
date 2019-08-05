@@ -1,4 +1,4 @@
-(defproject hackernews-pwa "0.1.0-SNAPSHOT"
+(defproject hackernews-app "0.1.0-SNAPSHOT"
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.clojure/clojurescript "1.10.520"]
                  [reagent "0.8.1"]
@@ -30,8 +30,8 @@
   {:builds
    [{:id           "dev"
      :source-paths ["src"]
-     :figwheel     {:on-jsload "hackernews-pwa.core/mount-root"}
-     :compiler     {:main                 hackernews-pwa.core
+     :figwheel     {:on-jsload "hackernews-app.core/mount-root"}
+     :compiler     {:main                 hackernews-app.core
                     :output-to            "resources/public/js/compiled/app.js"
                     :output-dir           "resources/public/js/compiled/out"
                     :asset-path           "js/compiled/out"
@@ -41,7 +41,7 @@
 
     {:id           "min"
      :source-paths ["src"]
-     :compiler     {:main            hackernews-pwa.core
+     :compiler     {:main            hackernews-app.core
                     :output-to       "resources/public/js/compiled/app.js"
                     :optimizations   :advanced
                     :closure-defines {goog.DEBUG false}

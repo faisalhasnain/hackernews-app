@@ -1,7 +1,7 @@
-(ns hackernews-pwa.views
+(ns hackernews-app.views
   (:require
    [re-frame.core :as re-frame]
-   [hackernews-pwa.icons :as icons]))
+   [hackernews-app.icons :as icons]))
 
 (def tabs {:top "Top" :new "New" :ask "Ask" :show "Show" :jobs "Jobs"})
 

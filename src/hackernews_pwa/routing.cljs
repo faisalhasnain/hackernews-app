@@ -1,4 +1,4 @@
-(ns hackernews-pwa.routing
+(ns hackernews-app.routing
   (:require
    [re-frame.core :as re-frame]
    [reitit.core :as reitit-core]
@@ -6,7 +6,7 @@
    [reitit.frontend.easy :as reitit-frontend-easy]
    [reitit.frontend.controllers :as reitit-frontend-controllers]
    [reitit.coercion.spec :as reitit-coercion-spec]
-   [hackernews-pwa.views :as views]))
+   [hackernews-app.views :as views]))
 
 ; routing utils
 

@@ -1,4 +1,4 @@
-(ns hackernews-pwa.db)
+(ns hackernews-app.db)
 
 (def default
   {:loading false

@@ -1,4 +1,4 @@
-(ns hackernews-pwa.config)
+(ns hackernews-app.config)
 
 (def debug?
   ^boolean goog.DEBUG)

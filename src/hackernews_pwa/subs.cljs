@@ -1,4 +1,4 @@
-(ns hackernews-pwa.subs
+(ns hackernews-app.subs
   (:require
    [re-frame.core :as re-frame]))
 
