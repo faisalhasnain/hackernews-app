@@ -64,13 +64,15 @@
        ^{:key (:id comment)} [render-comment comment])]))
 
 
+
 (defn main-panel []
   (let [loading @(re-frame/subscribe [:get-db :loading])
-        current-route @(re-frame/subscribe [:get-db :current-route])]
+        current-route @(re-frame/subscribe [:get-db :current-route])
+        view (-> current-route :data :view)]
     [:div.page
      [navigation current-route]
      (cond
        loading [:div.loading-container
                 [:button.button.is-large.is-loading.loading-indicator]]
-       current-route [(-> current-route :data :view) current-route])]))
+       view [view current-route])]))
 
