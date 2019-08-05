@@ -14,8 +14,8 @@
 }
 
 .post-item {
-  background-color: #f5fdff;
-  box-shadow: 0px 2px 3px #00b1d1, 0 0 0 1px #00b1d1;
+  background-color: #f5fdfff5;
+  box-shadow: 0px 2px 3px #00b2d198, 0 0 0 1px #00b2d198;
   color: #0A0A0A;
 }
 
@@ -38,7 +38,7 @@
   color: grey;
 }
 
-.post-stats span, .post-stats a {
+.post-stats span:not(:last-child), .post-stats a {
   margin-right: 1rem;
 }
 
