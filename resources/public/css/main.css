@@ -1,7 +1,8 @@
-.page {
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
+.page > .section {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
+
 .loading-container {
   display: flex;
   align-items: center;
@@ -20,14 +21,12 @@
 
 .post-item .feather {
   margin-right: 4px;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   color: grey
 }
 
 .post-link {
-  display: flex;
-  align-items: center;
   margin-bottom: 1rem;
 }
 
@@ -40,9 +39,7 @@
 }
 
 .post-stats span, .post-stats a {
-  margin-right: 1.5rem;
-  line-height: 1rem;
-  vertical-align: middle;
+  margin-right: 1rem;
 }
 
 .post-stats span {

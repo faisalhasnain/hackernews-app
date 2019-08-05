@@ -31,9 +31,8 @@
         tab (-> current-route :parameters :path :tab)]
     [:div.box.post-item
      [:div.post-link
-      (if (not= tab :ask) icons/external-link)
       [:a {:href url :target "_blank"}
-       [:div [:span.subtitle title] (if domain [:span.domain (str " (" domain ")")])]]]
+       (if (not= tab :ask) icons/external-link) [:span.subtitle title] (if domain [:span.domain (str " (" domain ")")])]]
      [:div.post-stats
       (if points [:span icons/thumbs-up points]) [:a {:on-click #(re-frame/dispatch [:navigate :comments {:tab tab :id id}])} icons/message-square comments_count] [:span icons/clock time_ago] (if user [:span icons/user user])]]))
 
@@ -49,14 +48,14 @@
 
 (defn render-posts [params]
   (let [posts @(re-frame/subscribe [:get-db :posts])]
-    [:div.container.is-fluid
+    [:div.container
      (for [post posts]
        ^{:key (:id post)} [render-post post])]))
 
 (defn render-comments [params]
   (let [item @(re-frame/subscribe [:get-db :comments])
         comments (:comments item)]
-    [:div.container.is-fluid
+    [:div.container
      ^{:key (:id item)} [render-post (-> item
                                          (dissoc item :comments)
                                          (assoc item :comments_count (count comments)))]
@@ -71,8 +70,9 @@
         view (-> current-route :data :view)]
     [:div.page
      [navigation current-route]
-     (cond
-       loading [:div.loading-container
-                [:button.button.is-large.is-loading.loading-indicator]]
-       view [view current-route])]))
+     [:section.section
+      (cond
+        loading [:div.loading-container
+                 [:button.button.is-large.is-loading.loading-indicator]]
+        view [view current-route])]]))
 
