@@ -1,6 +1,6 @@
 # hackernews-app
 
-A [re-frame](https://github.com/Day8/re-frame) application designed to ... well, that part is up to you.
+Neat Hacker News Reader App built using [ClojureScript](https://clojurescript.org), [Reagent](https://reagent-project.github.io) & [Re-frame](https://github.com/Day8/re-frame)
 
 ## Development Mode
 
