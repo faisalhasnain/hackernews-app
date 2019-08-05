@@ -39,7 +39,7 @@
                     :preloads             [devtools.preload]
                     :external-config      {:devtools/config {:features-to-install :all}}}}
 
-    {:id           "prod"
+    {:id           "min"
      :source-paths ["src"]
      :compiler     {:main            hackernews-pwa.core
                     :output-to       "resources/public/js/compiled/app.js"
