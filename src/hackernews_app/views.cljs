@@ -5,6 +5,8 @@
 
 (def tabs {:top "Top" :new "New" :ask "Ask" :show "Show" :jobs "Jobs"})
 
+(def page-counts {:top 10 :new 12 :ask 2 :show 2 :jobs 1})
+
 (defn navigation [params]
   (let [tab (-> params :parameters :path :tab)
         show-navbar-menu @(re-frame/subscribe [:get-db :show-navbar-menu])]
@@ -28,6 +30,14 @@
       [:div.navbar-start
        (for [[key val] tabs]
          ^{:key key} [:a.navbar-item {:class (if (= tab key) "is-active") :on-click #(re-frame/dispatch [:navigate :posts {:tab key}])} val])]]]))
+
+(defn pagination [tab page]
+  (if (> (tab page-counts) 1)
+    [:nav.pagination.is-rounded
+     {:aria-label "pagination", :role "navigation"}
+     [:ul.pagination-list
+      (for [page-num (range 1 (inc (tab page-counts)))]
+        ^{:key page-num} [:li [:a.pagination-link {:class (if (= page-num page) "is-current") :on-click #(re-frame/dispatch [:navigate :posts {:tab tab} {:page page-num}])} page-num]])]]))
 
 (defn render-post [{:keys [id title url domain points user time_ago domain comments_count]}]
   (let [current-route @(re-frame/subscribe [:get-db :current-route])
@@ -53,20 +63,25 @@
        ^{:key (:id comm)} [render-comment (assoc comm :depth (inc depth))]))])
 
 (defn render-posts [params]
-  (let [posts @(re-frame/subscribe [:get-db :posts])]
-    [:div.container
-     (for [post posts]
-       ^{:key (:id post)} [render-post post])]))
+  (let [posts @(re-frame/subscribe [:get-db :posts])
+        tab (get-in params [:parameters :path :tab])
+        page (get-in params [:parameters :query :page] 1)]
+    [:section.section
+     [:div.container
+      (for [post posts]
+        ^{:key (:id post)} [render-post post])
+      [pagination tab page]]]))
 
 (defn render-comments [params]
   (let [item @(re-frame/subscribe [:get-db :comments])
         comments (:comments item)]
-    [:div.container
-     ^{:key (:id item)} [render-post (-> item
-                                         (dissoc item :comments)
-                                         (assoc item :comments_count (count comments)))]
-     (for [comment comments]
-       ^{:key (:id comment)} [render-comment comment])]))
+    [:section.section
+     [:div.container
+      ^{:key (:id item)} [render-post (-> item
+                                          (dissoc item :comments)
+                                          (assoc item :comments_count (count comments)))]
+      (for [comment comments]
+        ^{:key (:id comment)} [render-comment comment])]]))
 
 
 
@@ -76,9 +91,8 @@
         view (-> current-route :data :view)]
     [:div.page
      [navigation current-route]
-     [:section.section
-      (cond
-        loading [:div.loading-container
-                 [:button.button.is-large.is-loading.loading-indicator]]
-        view [view current-route])]]))
+     (cond
+       loading [:div.loading-container
+                [:button.button.is-large.is-loading.loading-indicator]]
+       view [view current-route])]))
 

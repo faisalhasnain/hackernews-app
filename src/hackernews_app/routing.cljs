@@ -6,6 +6,7 @@
    [reitit.frontend.easy :as reitit-frontend-easy]
    [reitit.frontend.controllers :as reitit-frontend-controllers]
    [reitit.coercion.spec :as reitit-coercion-spec]
+   [spec-tools.data-spec :as spec-tools]
    [hackernews-app.views :as views]))
 
 ; routing utils
@@ -39,9 +40,11 @@
    ["/:tab"
     {:name      :posts
      :view      views/render-posts
-     :parameters {:path {:tab keyword?}}
+     :parameters {:path {:tab keyword?} :query {(spec-tools/opt :page) int?}}
      :controllers
-     [{:parameters {:path [:tab]} :start (fn [{{tab :tab} :path}] (re-frame/dispatch [:fetch-posts tab]))}]}]
+     [{:parameters {:path [:tab] :query [:page]}
+       :start (fn [{{tab :tab} :path {page :page} :query}]
+                (re-frame/dispatch [:fetch-posts tab (or page 1)]))}]}]
    ["/:tab/:id"
     {:name      :comments
      :view      views/render-comments

@@ -5,17 +5,17 @@
    [day8.re-frame.http-fx]
    [hackernews-app.db :as db]))
 
-(def urls {:top "https://api.hnpwa.com/v0/news/1.json"
-           :new "https://api.hnpwa.com/v0/newest/1.json"
-           :ask "https://api.hnpwa.com/v0/ask/1.json"
-           :show "https://api.hnpwa.com/v0/show/1.json"
-           :jobs "https://api.hnpwa.com/v0/jobs/1.json"})
+(def url-names {:top "news"
+           :new "newest"
+           :ask "ask"
+           :show "show"
+           :jobs "jobs"})
 
 (re-frame/reg-event-fx
  :fetch-posts
- (fn [{db :db} [_ tab]]
+ (fn [{db :db} [_ tab page]]
    {:http-xhrio {:method          :get
-                 :uri             (tab urls)
+                 :uri             (str "https://api.hnpwa.com/v0/" (tab url-names) "/" page ".json")
                  :format          (ajax/json-request-format)
                  :response-format (ajax/json-response-format {:keywords? true})
                  :on-success      [:show-resp :posts]
