@@ -83,7 +83,11 @@
       (for [comment comments]
         ^{:key (:id comment)} [render-comment comment])]]))
 
-
+(defn footer []
+  [:footer.section
+   [:div.container
+    [:hr]
+    [:p.has-text-centered.is-size-7 "Made with ❤️ by " [:a {:href "https://faisalhasnain.com" :target "_blank"} "Faisal Hasnain"] " using " [:a {:href "https://clojurescript.org" :target "_blank"} "ClojureScript"] ", " [:a {:href "https://reagent-project.github.io" :target "_blank"} "Reagent"] ", " [:a {:href "https://github.com/Day8/re-frame" :target "_blank"} "Re-frame"] " and " [:a {:href "https://bulma.io" :target "_blank"} "Bulma"]]]])
 
 (defn main-panel []
   (let [loading @(re-frame/subscribe [:get-db :loading])
@@ -94,5 +98,6 @@
      (cond
        loading [:div.loading-container
                 [:button.button.is-large.is-loading.loading-indicator]]
-       view [view current-route])]))
+       view [view current-route])
+     [footer]]))
 

@@ -3,6 +3,10 @@
   padding-bottom: 2rem;
 }
 
+.section:not(:last-child) {
+  padding-bottom: 0; 
+}
+
 .loading-container {
   display: flex;
   align-items: center;
