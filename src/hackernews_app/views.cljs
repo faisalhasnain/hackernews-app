@@ -6,7 +6,8 @@
 (def tabs {:top "Top" :new "New" :ask "Ask" :show "Show" :jobs "Jobs"})
 
 (defn navigation [params]
-  (let [tab (-> params :parameters :path :tab)]
+  (let [tab (-> params :parameters :path :tab)
+        show-navbar-menu @(re-frame/subscribe [:get-db :show-navbar-menu])]
     [:nav.navbar.is-info.is-fixed-top
      {:aria-label "main navigation", :role "navigation"}
      [:div.navbar-brand
@@ -17,11 +18,13 @@
        {:data-target "navbar"
         :aria-expanded "false"
         :aria-label "menu"
-        :role "button"}
+        :role "button"
+        :class (if show-navbar-menu "is-active")
+        :on-click #(re-frame/dispatch [:toggle-navbar-menu])}
        [:span {:aria-hidden "true"}]
        [:span {:aria-hidden "true"}]
        [:span {:aria-hidden "true"}]]]
-     [:div#navbar.navbar-menu
+     [:div#navbar.navbar-menu {:class (if show-navbar-menu "is-active")}
       [:div.navbar-start
        (for [[key val] tabs]
          ^{:key key} [:a.navbar-item {:class (if (= tab key) "is-active") :on-click #(re-frame/dispatch [:navigate :posts {:tab key}])} val])]]]))
