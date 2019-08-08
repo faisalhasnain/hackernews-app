@@ -7,11 +7,16 @@
   padding-bottom: 0; 
 }
 
+.pagination-list {
+  justify-content: center;
+}
+
 .loading-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: calc(25vh);
+  height: 25vh;
+  min-height: calc(100vh - 125px);
 }
 .loading-indicator {
   border-color: transparent;
