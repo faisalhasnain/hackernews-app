@@ -1,6 +1,12 @@
-# hackernews-app
+# Hacker News App
 
-Neat Hacker News Reader App built using [ClojureScript](https://clojurescript.org), [Reagent](https://reagent-project.github.io) & [Re-frame](https://github.com/Day8/re-frame)
+Neat Hacker News Reader App built using [ClojureScript](https://clojurescript.org)
+
+## Libraries Used
+- [Reagent](https://reagent-project.github.io)
+- [Re-frame](https://github.com/Day8/re-frame)
+- [Reitit](https://metosin.github.io/reitit/)
+- [Bulma](https://bulma.io)
 
 ## Development Mode
 
