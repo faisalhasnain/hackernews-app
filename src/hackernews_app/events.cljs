@@ -6,10 +6,10 @@
    [hackernews-app.db :as db]))
 
 (def url-names {:top "news"
-           :new "newest"
-           :ask "ask"
-           :show "show"
-           :jobs "jobs"})
+                :new "newest"
+                :ask "ask"
+                :show "show"
+                :jobs "jobs"})
 
 (re-frame/reg-event-fx
  :fetch-posts
@@ -18,9 +18,9 @@
                  :uri             (str "https://api.hnpwa.com/v0/" (tab url-names) "/" page ".json")
                  :format          (ajax/json-request-format)
                  :response-format (ajax/json-response-format {:keywords? true})
-                 :on-success      [:show-resp :posts]
-                 :on-failure      [:show-resp :error]}
-    :db (assoc db :loading true :show-navbar-menu false)}))
+                 :on-success      [:handle-resp :posts]
+                 :on-failure      [:handle-error]}
+    :db (assoc db :loading true :error nil :show-navbar-menu false)}))
 
 
 (re-frame/reg-event-fx
@@ -30,9 +30,9 @@
                  :uri             (str "https://api.hnpwa.com/v0/item/" id ".json")
                  :format          (ajax/json-request-format)
                  :response-format (ajax/json-response-format {:keywords? true})
-                 :on-success      [:show-resp :comments]
-                 :on-failure      [:show-resp :error]}
-    :db (assoc db :loading true)}))
+                 :on-success      [:handle-resp :comments]
+                 :on-failure      [:handle-error]}
+    :db (assoc db :loading true :error nil)}))
 
 (re-frame/reg-event-db
  :initialize-db
@@ -50,6 +50,16 @@
    (update db :show-navbar-menu not)))
 
 (re-frame/reg-event-db
- :show-resp
+ :handle-resp
  (fn [db [_ name val]]
    (assoc db name val :loading false)))
+
+(def error-messages {:error "an error on the server"
+                     :parse "the response from the server failed to parse"
+                     :aborted "the client aborted the request"
+                     :timeout "the request timed out"})
+
+(re-frame/reg-event-db
+ :handle-error
+ (fn [db [_ resp]]
+   (assoc db :error (str "Message: "(get error-messages (:failure resp) "Network Error") ", Status Code: " (:status resp)) :loading false)))

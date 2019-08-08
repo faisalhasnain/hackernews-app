@@ -31,6 +31,16 @@
        (for [[key val] tabs]
          ^{:key key} [:a.navbar-item {:class (if (= tab key) "is-active") :on-click #(re-frame/dispatch [:navigate :posts {:tab key}])} val])]]]))
 
+(defn loading-page []
+  [:div.loading-page
+   [:button.button.is-large.is-loading.loading-indicator]])
+
+(defn error-page [error]
+  [:div.error-page
+   [:div.message.is-danger
+    [:div.message-header "Something Went Wrong :("]
+    [:div.message-body  error]]])
+
 (defn pagination [tab page]
   (if (> (tab page-counts) 1)
     [:nav.pagination.is-rounded
@@ -91,22 +101,21 @@
      "Made with ❤️ by "
      [:a {:href "https://faisalhasnain.com" :target "_blank"} "Faisal Hasnain"]
      " using "
-     [:a {:href "https://clojurescript.org" :target "_blank"} "ClojureScript"]
-     ]
+     [:a {:href "https://clojurescript.org" :target "_blank"} "ClojureScript"]]
     [:p.has-text-centered.is-size-7
      "Open source with MIT License, hosted at "
-     [:a {:href "https://github.com/faisalhasnain/hackernews-app" :target "_blank"} "Github"]
-     ]]])
+     [:a {:href "https://github.com/faisalhasnain/hackernews-app" :target "_blank"} "Github"]]]])
 
 (defn main-panel []
   (let [loading @(re-frame/subscribe [:get-db :loading])
+        error @(re-frame/subscribe [:get-db :error])
         current-route @(re-frame/subscribe [:get-db :current-route])
         view (-> current-route :data :view)]
     [:div.page
      [navigation current-route]
      (cond
-       loading [:div.loading-container
-                [:button.button.is-large.is-loading.loading-indicator]]
+       loading [loading-page]
+       error [error-page error]
        view [view current-route])
      [footer]]))
 
