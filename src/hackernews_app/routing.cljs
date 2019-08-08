@@ -44,7 +44,7 @@
      :controllers
      [{:parameters {:path [:tab] :query [:page]}
        :start (fn [{{tab :tab} :path {page :page} :query}]
-                (re-frame/dispatch [:fetch-posts tab (or page 1)]))}]}]
+                (re-frame/dispatch [:fetch-posts tab (or page 1)]) (js/window.scrollTo 0,0))}]}]
    ["/:tab/:id"
     {:name      :comments
      :view      views/render-comments
