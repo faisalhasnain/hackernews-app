@@ -1,6 +1,6 @@
 (ns hackernews-app.db)
 
 (def default
-  {:loading false
+  {:loading true
    :show-navbar-menu false
    :current-route nil})

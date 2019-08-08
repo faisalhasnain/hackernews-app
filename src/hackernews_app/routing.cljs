@@ -58,4 +58,4 @@
   (reitit-frontend-easy/start!
    router
    on-navigate
-   {:use-fragment true}))
+   {:use-fragment false}))

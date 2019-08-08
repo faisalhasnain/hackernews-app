@@ -87,7 +87,16 @@
   [:footer.section
    [:div.container
     [:hr]
-    [:p.has-text-centered.is-size-7 "Made with ❤️ by " [:a {:href "https://faisalhasnain.com" :target "_blank"} "Faisal Hasnain"] " using " [:a {:href "https://clojurescript.org" :target "_blank"} "ClojureScript"] ", " [:a {:href "https://reagent-project.github.io" :target "_blank"} "Reagent"] ", " [:a {:href "https://github.com/Day8/re-frame" :target "_blank"} "Re-frame"] " and " [:a {:href "https://bulma.io" :target "_blank"} "Bulma"]]]])
+    [:p.has-text-centered.is-size-7
+     "Made with ❤️ by "
+     [:a {:href "https://faisalhasnain.com" :target "_blank"} "Faisal Hasnain"]
+     " using "
+     [:a {:href "https://clojurescript.org" :target "_blank"} "ClojureScript"]
+     ]
+    [:p.has-text-centered.is-size-7
+     "Open source with MIT License, hosted at "
+     [:a {:href "https://github.com/faisalhasnain/hackernews-app" :target "_blank"} "Github"]
+     ]]])
 
 (defn main-panel []
   (let [loading @(re-frame/subscribe [:get-db :loading])
