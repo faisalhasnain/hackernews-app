@@ -77,7 +77,7 @@
         tab (get-in params [:parameters :path :tab])
         page (get-in params [:parameters :query :page] 1)]
     [:section.section
-     [:div.container
+     [:div.container.is-fluid
       (for [post posts]
         ^{:key (:id post)} [render-post post])
       [pagination tab page]]]))
@@ -86,7 +86,7 @@
   (let [item @(re-frame/subscribe [:get-db :comments])
         comments (:comments item)]
     [:section.section
-     [:div.container
+     [:div.container.is-fluid
       ^{:key (:id item)} [render-post (-> item
                                           (dissoc item :comments)
                                           (assoc item :comments_count (count comments)))]
@@ -95,7 +95,7 @@
 
 (defn footer []
   [:footer.section
-   [:div.container
+   [:div.container.is-fluid
     [:hr]
     [:p.has-text-centered.is-size-7
      "Made with ❤️ by "
