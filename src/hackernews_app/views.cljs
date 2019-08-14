@@ -54,9 +54,9 @@
         tab (-> current-route :parameters :path :tab)]
     [:div.box.post-item
      [:div.post-link
-      (if (not= tab :ask)
+      (if domain
         [:a {:href url :target "_blank"}
-         icons/external-link [:span.subtitle title] (if domain [:span.domain (str " (" domain ")")])]
+         icons/external-link [:span.subtitle title] [:span.domain (str " (" domain ")")]]
         [:a {:on-click #(re-frame/dispatch [:navigate :comments {:tab tab :id id}])}
          [:span.subtitle title] (if domain [:span.domain (str " (" domain ")")])])]
      [:div.post-stats
