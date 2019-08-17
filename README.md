@@ -1,6 +1,6 @@
 # Hacker News App
 
-Open-source Hacker News Reader built using [ClojureScript](https://clojurescript.org) & [Re-frame](https://github.com/Day8/re-frame)
+Open-source Hacker News Reader focusing on neat design and better readability built using [ClojureScript](https://clojurescript.org) & [Re-frame](https://github.com/Day8/re-frame)
 
 ## Libraries Used
 - [Reagent](https://reagent-project.github.io)
