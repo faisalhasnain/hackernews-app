@@ -47,7 +47,8 @@
      {:aria-label "pagination", :role "navigation"}
      [:ul.pagination-list
       (for [page-num (range 1 (inc (tab page-counts)))]
-        ^{:key page-num} [:li [:a.pagination-link {:class (if (= page-num page) "is-current") :on-click #(re-frame/dispatch [:navigate :posts {:tab tab} {:page page-num}])} page-num]])]]))
+        ^{:key page-num} [:li
+                          [:a.pagination-link {:class (if (= page-num page) "is-current") :on-click #(re-frame/dispatch [:navigate :posts {:tab tab} {:page page-num}])} page-num]])]]))
 
 (defn render-post [{:keys [id title url domain points user time_ago domain comments_count]}]
   (let [current-route @(re-frame/subscribe [:get-db :current-route])
@@ -60,7 +61,9 @@
         [:a {:on-click #(re-frame/dispatch [:navigate :comments {:tab tab :id id}])}
          [:span.subtitle title] (if domain [:span.domain (str " (" domain ")")])])]
      [:div.post-stats
-      (if points [:span {:title "Points"} icons/thumbs-up points]) [:a {:title "Comments" :on-click #(re-frame/dispatch [:navigate :comments {:tab tab :id id}])} icons/message-square comments_count] [:span icons/clock time_ago] (if user [:span {:title "User"} icons/user user])]]))
+      (if points [:span {:title "Points"} icons/thumbs-up points])
+      [:a {:title "Comments" :on-click #(re-frame/dispatch [:navigate :comments {:tab tab :id id}])} icons/message-square comments_count]
+      [:span icons/clock time_ago] (if user [:span {:title "User"} icons/user user])]]))
 
 
 (defn render-comment [{:keys [id content user time_ago comments depth]}]
